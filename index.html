@@ -1,162 +1,404 @@
 <!DOCTYPE html>
-<!-- oss-template-2026:placeholder （この目印で，scripts/check.sh が「準備中」のページかどうかを見分けます） -->
-<!--
-  テンプレートの「準備中」のページです．
-  このページが https://ユーザー名.github.io/ に表示されたら，GitHub Pages の設定は成功です．
-  第7回の実習4で，このファイルを第6回で作った index.html に置きかえます．
--->
 <html lang="ja">
 <head>
+  <!-- 文字コードをUTF-8に指定 -->
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>準備中</title>
+  <!-- スマートフォンで画面幅に合わせて表示するための設定 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>taneda のポートフォリオ</title>
+
   <style>
-    /* ===== 色の設定 ===== */
+    /* ==========================================
+       色の設定（黒と明るい水色）
+       ここを変えるとサイト全体の色が変わります
+       ========================================== */
     :root {
-      --main-color: #2e7d32;  /* メインの色（見出し・番号） */
-      --bg-color: #f5f8f5;    /* ページの背景の色 */
-      --card-color: #ffffff;  /* カードの背景の色 */
-      --text-color: #222222;  /* 文字の色 */
-      --sub-color: #666666;   /* 補足の文字の色 */
-      --line-color: #dfe6df;  /* 区切り線の色 */
+      --bg: #0b0d10;          /* 背景：黒に近い色 */
+      --bg-card: #14181d;     /* カードの背景：少し明るい黒 */
+      --accent: #5ad1ff;      /* アクセント：明るい水色 */
+      --text: #eef2f5;        /* 本文の文字色 */
+      --text-sub: #9aa6b0;    /* 補足の文字色（グレー） */
+      --line: #262c33;        /* 区切り線・枠線の色 */
     }
 
-    /* パソコンやスマートフォンがダークモードのときの色 */
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --main-color: #81c784;
-        --bg-color: #121512;
-        --card-color: #1e231e;
-        --text-color: #e8ece8;
-        --sub-color: #a0a8a0;
-        --line-color: #2f362f;
-      }
+    /* ==========================================
+       全体の基本設定
+       ========================================== */
+    * {
+      box-sizing: border-box; /* 幅の計算に余白と枠線を含める */
+      margin: 0;
+      padding: 0;
     }
 
-    /* ページ全体：カードを画面のまんなかに置く */
+    html {
+      scroll-behavior: smooth; /* ページ内リンクをなめらかに移動 */
+    }
+
     body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
-      box-sizing: border-box;
-      font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
       line-height: 1.8;
-      color: var(--text-color);
-      background: var(--bg-color);
+      -webkit-text-size-adjust: 100%; /* スマホで文字サイズが勝手に変わるのを防ぐ */
     }
 
-    /* まんなかのカード */
-    main {
-      width: 100%;
-      max-width: 600px;
-      padding: 32px 28px;
-      background: var(--card-color);
-      border-top: 6px solid var(--main-color);
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    /* 各セクションの中身を中央に寄せる共通設定 */
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 20px;
     }
 
-    h1 {
-      margin: 0 0 4px;
-      font-size: clamp(1.3rem, 6vw, 1.6rem);  /* スマートフォンでは少し小さくする */
-      line-height: 1.4;
-      color: var(--main-color);
+    /* ==========================================
+       ヘッダー（上部ナビゲーション）
+       ========================================== */
+    header {
+      position: sticky;           /* スクロールしても上に固定 */
+      top: 0;
+      z-index: 10;
+      background: rgba(11, 13, 16, 0.92);
+      border-bottom: 1px solid var(--line);
     }
 
-    h2 {
-      margin: 28px 0 8px;
-      padding-bottom: 4px;
-      font-size: 1.05rem;
-      border-bottom: 1px solid var(--line-color);
-    }
-
-    /* 「設定は成功」のバッジ */
-    .badge {
-      display: inline-block;
-      margin: 8px 0 0;
-      padding: 2px 12px;
-      font-size: 0.9rem;
-      font-weight: bold;
-      color: var(--card-color);
-      background: var(--main-color);
-      border-radius: 999px;
-    }
-
-    /* 「次にやること」の番号つきリスト */
-    ol {
-      margin: 0;
-      padding-left: 1.4em;
-    }
-    li {
-      margin-bottom: 6px;
-    }
-    li::marker {
-      font-weight: bold;
-      color: var(--main-color);
-    }
-
-    /* コマンドの見た目 */
-    code {
-      padding: 1px 6px;
-      font-family: "SFMono-Regular", Consolas, monospace;
-      font-size: 0.88em;
-      background: var(--bg-color);
-      border-radius: 4px;
-      white-space: nowrap;  /* コマンドの途中で折り返さない */
-    }
-
-    /* 補足の小さな文字 */
-    .sub {
-      font-size: 0.9rem;
-      color: var(--sub-color);
-    }
-
-    /* いちばん下の小さな文字 */
-    footer {
-      margin-top: 28px;
+    header .container {
+      display: flex;
+      flex-wrap: wrap;            /* 狭い画面では折り返す */
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px 16px;
       padding-top: 12px;
-      font-size: 0.8rem;
-      color: var(--sub-color);
-      border-top: 1px solid var(--line-color);
+      padding-bottom: 12px;
     }
-    a {
-      color: var(--main-color);
+
+    /* 左上のロゴ（名前） */
+    .logo {
+      font-weight: bold;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ナビゲーションのリンク一覧 */
+    nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 18px;
+      list-style: none;
+    }
+
+    nav a {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-size: 0.85rem;
+      padding: 4px 0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    /* マウスを乗せたとき水色にする */
+    nav a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ==========================================
+       ヒーロー（最初に目に入る大きな紹介部分）
+       ========================================== */
+    .hero {
+      padding: 90px 0 80px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    /* 小さな英字ラベル */
+    .hero .label {
+      color: var(--accent);
+      font-size: 0.8rem;
+      letter-spacing: 0.3em;
+      margin-bottom: 16px;
+    }
+
+    /* 名前（大きな見出し） */
+    .hero h1 {
+      font-size: clamp(2.6rem, 11vw, 4.6rem); /* 画面幅に応じて大きさが変わる */
+      line-height: 1.15;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+
+    /* 名前の横に引く水色の線 */
+    .hero h1::after {
+      content: "";
+      display: block;
+      width: 64px;
+      height: 4px;
+      background: var(--accent);
+      margin-top: 18px;
+    }
+
+    /* 所属・学年 */
+    .hero .affiliation {
+      color: var(--text-sub);
+      margin-top: 22px;
+      font-size: 0.95rem;
+    }
+
+    /* キャッチコピー */
+    .hero .catch {
+      margin-top: 28px;
+      font-size: 1.15rem;
+      padding-left: 16px;
+      border-left: 3px solid var(--accent);
+    }
+
+    /* ==========================================
+       セクション共通のデザイン
+       ========================================== */
+    section {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    /* セクションの英字ラベル */
+    .section-label {
+      color: var(--accent);
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      margin-bottom: 4px;
+    }
+
+    /* セクションの見出し */
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: 28px;
+    }
+
+    /* ==========================================
+       カード（枠付きの箱）
+       ========================================== */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 22px;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    /* カードを並べるグリッド：スマホでは1列、広い画面では2列 */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    /* ==========================================
+       基本情報の表
+       ========================================== */
+    .info-list {
+      list-style: none;
+    }
+
+    .info-list li {
+      display: flex;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .info-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* 項目名（名前・学年など） */
+    .info-list .key {
+      flex: 0 0 4.5em;
+      color: var(--text-sub);
+      font-size: 0.9rem;
+    }
+
+    /* ==========================================
+       タグ風の表示（趣味・言語の一覧に使用）
+       ========================================== */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      list-style: none;
+    }
+
+    .tags li {
+      padding: 6px 16px;
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.95rem;
+      background: rgba(90, 209, 255, 0.06);
+    }
+
+    /* ==========================================
+       学びたいことのリスト
+       ========================================== */
+    .goal-list {
+      list-style: none;
+    }
+
+    .goal-list li {
+      position: relative;
+      padding: 12px 0 12px 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .goal-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* 項目の頭につける水色の四角 */
+    .goal-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 1.35em;
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+    }
+
+    /* ==========================================
+       フッター
+       ========================================== */
+    footer {
+      padding: 32px 0;
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 0.8rem;
+    }
+
+    /* ==========================================
+       画面が広いとき（タブレット・PC）の調整
+       ========================================== */
+    @media (min-width: 640px) {
+      .grid {
+        grid-template-columns: 1fr 1fr; /* 2列にする */
+      }
+      .hero {
+        padding: 120px 0 100px;
+      }
     }
   </style>
 </head>
+
 <body>
+
+  <!-- ===== ヘッダー：ロゴとページ内リンク ===== -->
+  <header>
+    <div class="container">
+      <a class="logo" href="#top">taneda</a>
+      <nav>
+        <ul>
+          <li><a href="#about">基本情報</a></li>
+          <li><a href="#hobby">趣味</a></li>
+          <li><a href="#skills">経験</a></li>
+          <li><a href="#goal">学びたいこと</a></li>
+          <li><a href="#message">ひとこと</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
   <main>
-    <h1>このサイトは準備中です</h1>
-    <p class="badge">GitHub Pages の設定 OK</p>
-    <p>このページが表示されていれば，あなたのリポジトリは正しく公開されています．
-      あとは，このページを自分のサイトに置きかえるだけです．</p>
 
-    <h2>次にやること</h2>
-    <ol>
-      <li>このリポジトリを，SSHのURLで <code>git clone</code> する</li>
-      <li><code>index.html</code> を，第6回で作ったサイトに置きかえる</li>
-      <li><code>bash scripts/check.sh</code> で，公開前のチェックをする</li>
-      <li><code>git add</code> → <code>git commit</code> → <code>git push origin main</code> する</li>
-      <li>数分待ってから，このページを再読み込みする</li>
-    </ol>
-    <p class="sub">再読み込みしても変わらないときは，強制再読み込み（Windows：Ctrl + F5，Mac：Command + Shift + R）を試しましょう．</p>
+    <!-- ===== ヒーロー：名前とキャッチコピー ===== -->
+    <div class="hero" id="top">
+      <div class="container">
+        <p class="label">PORTFOLIO</p>
+        <h1>taneda</h1>
+        <p class="affiliation">拓殖大学 工学部 ／ 3年</p>
+        <p class="catch">休みの日は友達とゲームをしています。</p>
+      </div>
+    </div>
 
-    <h2>公開する前に</h2>
-    <ul>
-      <li>本名のフルネーム・学籍番号・住所・電話番号・メールアドレスが入っていないか</li>
-      <li>自己紹介に書いていないことを，AIが付け足していないか</li>
-    </ul>
-    <p class="sub">このリポジトリは Public です．サイトだけでなく，ファイルの中身やコミットの履歴も，誰でも見ることができます．</p>
+    <!-- ===== 基本情報 ===== -->
+    <section id="about">
+      <div class="container">
+        <p class="section-label">ABOUT</p>
+        <h2>基本情報</h2>
+        <div class="card">
+          <ul class="info-list">
+            <li><span class="key">名前</span><span>taneda</span></li>
+            <li><span class="key">学年</span><span>3年</span></li>
+            <li><span class="key">所属</span><span>拓殖大学 工学部</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-    <footer>
-      拓殖大学工学部『オープンソースソフトウェア』2026年度<br>
-      <a href="https://github.com/tomohitoy/oss-practice-2026/blob/main-07/chap07/README.md">第7回の資料</a>
-      ・
-      <a href="https://github.com/tomohitoy/oss-template-2026">テンプレート（tomohitoy/oss-template-2026）</a>
-    </footer>
+    <!-- ===== 趣味・好きなこと ===== -->
+    <section id="hobby">
+      <div class="container">
+        <p class="section-label">HOBBY</p>
+        <h2>趣味・好きなこと</h2>
+        <ul class="tags">
+          <li>ゲーム</li>
+          <li>音楽を聴く</li>
+          <li>散歩</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== プログラミング経験 ===== -->
+    <section id="skills">
+      <div class="container">
+        <p class="section-label">EXPERIENCE</p>
+        <h2>プログラミング経験</h2>
+        <ul class="tags">
+          <li>Java</li>
+          <li>HTML / CSS / JS</li>
+          <li>Python</li>
+          <li>Go言語</li>
+          <li>Haskell</li>
+          <li>Prolog</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== この授業で学びたいこと ===== -->
+    <section id="goal">
+      <div class="container">
+        <p class="section-label">GOAL</p>
+        <h2>この授業で学びたいこと</h2>
+        <div class="card">
+          <ul class="goal-list">
+            <li>OSSの使い方とその上での注意点</li>
+            <li>OSSの未来予想図</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ひとこと ===== -->
+    <section id="message">
+      <div class="container">
+        <p class="section-label">MESSAGE</p>
+        <h2>ひとこと</h2>
+        <div class="card">
+          <p>昔はまっていたゲームが、最近サービス終了を発表してしまいました。</p>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <!-- ===== フッター ===== -->
+  <footer>
+    <div class="container">
+      <p>&copy; taneda</p>
+    </div>
+  </footer>
+
 </body>
 </html>
